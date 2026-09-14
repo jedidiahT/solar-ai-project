@@ -29,18 +29,18 @@ def solar_report(client_name, panels, wattage, battery_voltage):
         print("Warning: Battery voltage low. Lower load count to only essentials") 
        
 
-client_name = input("Enter client name: ")
-panels = int(input("Enter number of panels: "))
-wattage = int(input( "Enter panel wattage: "))
-battery_voltage = float(input("Enter battery voltage: "))
-
-solar_report(client_name, panels, wattage, battery_voltage)
-
+session_clients = []
 while True:
     client_name = input("Enter client name (or 'quit' to exit): ")
     if client_name == "quit":
+        print(f"\nDone for today! Clients attended to this session: {len(session_clients)}")
+        for client in session_clients:
+                print(f" - {client}")
         break
+  
     panels = int(input("Enter number of panels: "))
     wattage = int(input("Enter panel wattage: "))
     battery_voltage = float(input("Enter battery voltage: "))
     solar_report(client_name, panels, wattage, battery_voltage)
+    session_clients.append(client_name)
+
