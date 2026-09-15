@@ -35,12 +35,17 @@ while True:
     if client_name == "quit":
         print(f"\nDone for today! Clients attended to this session: {len(session_clients)}")
         for client in session_clients:
-                print(f" - {client}")
+                print(f" - {client['name']} | Panels: {client['panels']} | Wattage: {client['wattage']}W | Voltage: {client['battery_voltage']}V")
         break
   
     panels = int(input("Enter number of panels: "))
     wattage = int(input("Enter panel wattage: "))
     battery_voltage = float(input("Enter battery voltage: "))
     solar_report(client_name, panels, wattage, battery_voltage)
-    session_clients.append(client_name)
+    session_clients.append({
+        "name": client_name,
+        "panels": panels,
+        "wattage": wattage,
+        "battery_voltage": battery_voltage
+    })
 
