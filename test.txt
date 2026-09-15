@@ -1,0 +1,2 @@
+Hello from Python!
+This text is saved permanently.

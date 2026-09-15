@@ -1,3 +1,6 @@
+import csv
+import os
+
 def greet_technician(name, city):
     print(f"Welcome to the Solar AI Diagnostics System")
     print(f"Technician: {name}")
@@ -33,9 +36,19 @@ session_clients = []
 while True:
     client_name = input("Enter client name (or 'quit' to exit): ")
     if client_name == "quit":
+
         print(f"\nDone for today! Clients attended to this session: {len(session_clients)}")
         for client in session_clients:
-                print(f" - {client['name']} | Panels: {client['panels']} | Wattage: {client['wattage']}W | Voltage: {client['battery_voltage']}V")
+            print(f" - {client['name']} | Panels: {client['panels']} | Wattage: {client['wattage']}W | Voltage: {client['battery_voltage']}V")
+
+        file_exists = os.path.exists("session_log.csv")
+        with open("session_log.csv", "a", newline="") as file:
+            writer = csv.writer(file)
+            if not file_exists:
+                writer.writerow(["Name", "Panels", "Wattage", "Battery Voltage"])
+            for client in session_clients:
+                writer.writerow([client['name'], client['panels'], client['wattage'], client['battery_voltage']])
+        print("Session saved to session_log.csv!")
         break
   
     panels = int(input("Enter number of panels: "))
