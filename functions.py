@@ -1,6 +1,20 @@
 import csv
 import os
 
+def get_valid_int(prompt):
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("Not quite! Enter whole figures please!")
+
+def get_valid_float(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Not quite! Please enter correct format please!")
+
 def greet_technician(name, city):
     print(f"Welcome to the Solar AI Diagnostics System")
     print(f"Technician: {name}")
@@ -50,10 +64,9 @@ while True:
                 writer.writerow([client['name'], client['panels'], client['wattage'], client['battery_voltage']])
         print("Session saved to session_log.csv!")
         break
-  
-    panels = int(input("Enter number of panels: "))
-    wattage = int(input("Enter panel wattage: "))
-    battery_voltage = float(input("Enter battery voltage: "))
+    panels = get_valid_int("Enter number of panels: ")
+    wattage = get_valid_int("Enter panel wattage: ")
+    battery_voltage = get_valid_float("Enter battery voltage: ")
     solar_report(client_name, panels, wattage, battery_voltage)
     session_clients.append({
         "name": client_name,
