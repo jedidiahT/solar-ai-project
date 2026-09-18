@@ -1,6 +1,42 @@
 import csv
 import os
 
+class SolarSystem:
+    def __init__(self, client_name, panels, wattage, battery_voltage):
+        self.client_name = client_name
+        self.panels = panels
+        self.wattage = wattage
+        self.battery_voltage = battery_voltage
+
+    def total_wattage(self):
+        return self.panels * self.wattage
+
+    def diagnose(self):
+        if self.battery_voltage > 52.1:
+            return "Look's Great"
+        elif self.battery_voltage > 48.4:
+            return "Consider averaging load profile"
+        else:
+            return "Your battery bank has low charge left"
+
+
+    def report(self):
+        print(f"Client: {self.client_name}")
+        print(f"Total Wattage: {self.total_wattage()}W")
+        print(f"Battery Voltage: {self.battery_voltage}V")
+        print(f"Diagnosis: {self.diagnose()}")
+        print("-" * 40)
+
+    def to_dict(self):
+        return {
+            "client": self.client_name,
+            "panels": self.panels,
+            "total_wattage": self.total_wattage(),
+            "voltage": self.battery_voltage,
+            "diagnosis": self.diagnose()
+        }
+
+
 def get_valid_int(prompt):
     while True:
         try:
@@ -53,7 +89,7 @@ while True:
 
         print(f"\nDone for today! Clients attended to this session: {len(session_clients)}")
         for client in session_clients:
-            print(f" - {client['name']} | Panels: {client['panels']} | Wattage: {client['wattage']}W | Voltage: {client['battery_voltage']}V")
+            print(f" - {client['client']} | Panels: {client['panels']} | Wattage: {client['total_wattage']}W | Voltage: {client['voltage']}V")
 
         file_exists = os.path.exists("session_log.csv")
         with open("session_log.csv", "a", newline="") as file:
@@ -61,17 +97,13 @@ while True:
             if not file_exists:
                 writer.writerow(["Name", "Panels", "Wattage", "Battery Voltage"])
             for client in session_clients:
-                writer.writerow([client['name'], client['panels'], client['wattage'], client['battery_voltage']])
+                writer.writerow([client['client'], client['panels'], client['total_wattage'], client['voltage']])
         print("Session saved to session_log.csv!")
         break
     panels = get_valid_int("Enter number of panels: ")
     wattage = get_valid_int("Enter panel wattage: ")
     battery_voltage = get_valid_float("Enter battery voltage: ")
-    solar_report(client_name, panels, wattage, battery_voltage)
-    session_clients.append({
-        "name": client_name,
-        "panels": panels,
-        "wattage": wattage,
-        "battery_voltage": battery_voltage
-    })
+    system = SolarSystem(client_name, panels, wattage, battery_voltage)
+    system.report()
+    session_clients.append(system.to_dict())
 

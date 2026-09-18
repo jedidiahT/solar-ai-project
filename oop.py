@@ -24,12 +24,19 @@ class SolarSytstem:
         print(f"Diagnosis: {self.diagnose()}")
         print("-" * 40)
 
+    def to_dict(self):
+        return {
+            "client": self.client_name,
+            "total_wattage": self.total_wattage(),
+            "voltage": self.battery_voltage,
+            "diagnosis": self.diagnose()
+        }
+
 #Creating two separate solar system objects
 system1 = SolarSytstem("MR. DUBE", 12, 700,52.5)
 system2 = SolarSytstem("Wattle Company", 80, 650, 46.7)
 
 system1.report()
 system2.report()
-
+print(system1.to_dict())
         
-
