@@ -1,0 +1,6 @@
+print("HEY, WHATS UP! I'M BACK")
+print(f"Claude thinks I've lost my edge so im showing him I haven't")
+print(f"I would love to add some boolean here but I kind of dont remember how to do it lol")
+print(f"Please remind me why I have to keep doing the whole f thingy")
+print(f"Not to forget the other guys, integers and the other true/false thingy lol")
+print(f"I just remembered; it's strings, integers, float AND boolean hahaha")
