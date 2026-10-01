@@ -71,21 +71,15 @@ def get_valid_float(prompt):
             print("Not quite! Please enter correct format please!")
 
 def greet_technician(name, city):
-    print(f"Welcome to the Solar AI Diagnostics System")
+    print(f"WELCOME BACK TO YOUR JOURNAL, ENGINEER")
     print(f"Technician: {name}")
     print(f"Location: {city}")
 
-name = input("Enter your name: ")
-city = input("Enter your location: ")
-
-greet_technician(name, city)
 
 def calculate_system_wattage(panels, wattage_per_panel):
     total = panels * wattage_per_panel
     return total
 
-result = calculate_system_wattage(16, 550)
-print(f"Total system wattage: {result}watts")
 
 def solar_report(client_name, panels, wattage, battery_voltage):
     total_wattage = panels * wattage
@@ -101,24 +95,29 @@ def solar_report(client_name, panels, wattage, battery_voltage):
         print("Warning: Battery voltage low. Lower load count to only essentials") 
        
 
-session_clients = []
-while True:
-    client_name = input("Enter client name (or 'quit' to exit): ")
-    if client_name == "quit":
+if __name__ == "__main__":
+    name = input("Greetings Engineer: ")
+    city = input("Where are you today?: ")
+    greet_technician(name, city)
 
-        print(f"\nDone for today! Clients attended to this session: {len(session_clients)}")
-        for client in session_clients:
-            print(f" - {client['client']} | Panels: {client['panels']} | Wattage: {client['total_wattage']}W | Voltage: {client['voltage']}V")
+    session_clients = []
+    while True:
+        client_name = input("Enter client name (or 'quit' to exit): ")
+        if client_name == "quit":
 
-        file_exists = os.path.exists("session_log.csv")
-        with open("session_log.csv", "a", newline="") as file:
-            writer = csv.writer(file)
-            if not file_exists:
-                writer.writerow(["Name", "Panels", "Wattage", "Battery Voltage"])
+            print(f"\nDone for today! Clients attended to this session: {len(session_clients)}")
             for client in session_clients:
-                writer.writerow([client['client'], client['panels'], client['total_wattage'], client['voltage']])
-        print("Session saved to session_log.csv!")
-        break
+             print(f" - {client['client']} | Panels: {client['panels']} | Wattage: {client['total_wattage']}W | Voltage: {client['voltage']}V")
+
+            file_exists = os.path.exists("session_log.csv")
+            with open("session_log.csv", "a", newline="") as file:
+             writer = csv.writer(file)
+            if not file_exists:
+                    writer.writerow(["Name", "Panels", "Wattage", "Battery Voltage"])
+                    for client in session_clients:
+                        writer.writerow([client['client'], client['panels'], client['total_wattage'], client['voltage']])
+            print("Session saved to session_log.csv!")
+            break
     panels = get_valid_int("Enter number of panels: ")
     wattage = get_valid_int("Enter panel wattage: ")
     battery_voltage = get_valid_float("Enter battery voltage: ")
