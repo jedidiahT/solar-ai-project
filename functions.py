@@ -26,8 +26,12 @@ class SolarSystem:
             f"Total wattage: {self.total_wattage()}W. "
             F"Provide a brief diagnosis and recommendation in 3 sentences. "
         )
-        response = model.generate_content(prompt)
-        return response.text
+        try:
+            response = model.generate_content(prompt)
+            return response.text
+        except Exception as error:
+            return f"Oops! your in-depth diagnosis isn't available right now. ({type (error).__name__}). Stick with the brief for now!"
+        
 
     
     def diagnose(self):
@@ -75,7 +79,6 @@ def greet_technician(name, city):
     print(f"Technician: {name}")
     print(f"Location: {city}")
 
-
 def calculate_system_wattage(panels, wattage_per_panel):
     total = panels * wattage_per_panel
     return total
@@ -118,12 +121,12 @@ if __name__ == "__main__":
                         writer.writerow([client['client'], client['panels'], client['total_wattage'], client['voltage']])
             print("Session saved to session_log.csv!")
             break
-    panels = get_valid_int("Enter number of panels: ")
-    wattage = get_valid_int("Enter panel wattage: ")
-    battery_voltage = get_valid_float("Enter battery voltage: ")
-    system = SolarSystem(client_name, panels, wattage, battery_voltage)
-    system.report()
-    print("\nAI Diagnosis:")
-    print(system.ai_diagnose())
-    session_clients.append(system.to_dict())
+        panels = get_valid_int("Enter number of panels: ")
+        wattage = get_valid_int("Enter panel wattage: ")
+        battery_voltage = get_valid_float("Enter battery voltage: ")
+        system = SolarSystem(client_name, panels, wattage, battery_voltage)
+        system.report()
+        print("\nAI Diagnosis:")
+        print(system.ai_diagnose())
+        session_clients.append(system.to_dict())
 
