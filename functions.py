@@ -114,11 +114,11 @@ if __name__ == "__main__":
 
             file_exists = os.path.exists("session_log.csv")
             with open("session_log.csv", "a", newline="") as file:
-             writer = csv.writer(file)
-            if not file_exists:
+                writer = csv.writer(file)
+                if not file_exists:
                     writer.writerow(["Name", "Panels", "Wattage", "Battery Voltage"])
-                    for client in session_clients:
-                        writer.writerow([client['client'], client['panels'], client['total_wattage'], client['voltage']])
+                for client in session_clients:
+                    writer.writerow([client['client'], client['panels'], client['total_wattage'], client['voltage']])
             print("Session saved to session_log.csv!")
             break
         panels = get_valid_int("Enter number of panels: ")
