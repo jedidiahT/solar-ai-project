@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <title>SOLAR AI DIAGNOSTCS</title>
+</head>   
+<body>
+    <h1>THE ENGINEER'S DIAGNOSTICS SYSTEM</h1>
+
+    <label>Client name</label>
+    <input id="client_name" type="text">
+
+    <label>Number of panels</label>
+    <input id="panels" type="number">
+
+    <label>Panel wattage (W)</label>
+    <input id="wattage" type="number">
+
+    <label>Battery Voltage</label>
+    <input id="battery_voltage" type="number" step="0.1">
+
+    <button onclick="getDiagnosis()">GET DIAGNOSIS</button>
+    <div id="result"></div>
+
+    <script>
+        async function getDiagnosis() {
+            const clientName = document.getElementById("client_name").value; 
+            document.getElementById("result").innerText = "Diagnosing " + clientName + "...";
+
+            const jobCard = {
+                client_name: clientName,
+                panels: Number(document.getElementById("panels").value),
+                wattage: Number(document.getElementById("wattage").value),
+                battery_voltage: Number(document.getElementById("battery_voltage").value)
+
+            };
+
+            const response = await fetch("/diagnose", {
+                method: "POST",
+                headers: {"Content-Type": "application/json" },
+                body: JSON.stringify(jobCard)
+            });
+
+            const report = await response.json();
+
+            document.getElementById("result").innerText = 
+            "Client: " + report.client + "\n" +
+            "Total wattage: " + report.total_wattage + "W\n" + 
+            "Diagnosis: " + report.diagnosis + "\n" + 
+            "AI diagnosis: " + report.ai_diagnosis;
+        }
+    </script>
+</body> 
+</html>
