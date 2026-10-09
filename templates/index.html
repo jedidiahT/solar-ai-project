@@ -18,6 +18,14 @@
     <label>Battery Voltage</label>
     <input id="battery_voltage" type="number" step="0.1">
 
+    <label>System Voltage</label>
+    <select id="system_voltage">
+        <option value="12">12V</option>
+        <option value="24">24V</option>
+        <option value="48" selected>48V</option>
+        <option value="96">96V</option>
+    </select>
+
     <button onclick="getDiagnosis()">GET DIAGNOSIS</button>
     <div id="result"></div>
 
@@ -30,7 +38,8 @@
                 client_name: clientName,
                 panels: Number(document.getElementById("panels").value),
                 wattage: Number(document.getElementById("wattage").value),
-                battery_voltage: Number(document.getElementById("battery_voltage").value)
+                battery_voltage: Number(document.getElementById("battery_voltage").value),
+                system_voltage: Number(document.getElementById("system_voltage").value)
 
             };
 

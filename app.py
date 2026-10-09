@@ -16,7 +16,8 @@ def diagnose():
         data["client_name"],
         data["panels"],
         data["wattage"],
-        data["battery_voltage"]
+        data["battery_voltage"],
+        data.get("system_voltage", 48)
     )
     result = system.to_dict()
     result["ai_diagnosis"] = system.ai_diagnose()

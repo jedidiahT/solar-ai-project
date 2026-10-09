@@ -9,11 +9,12 @@ genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-3.8-flash")
 
 class SolarSystem:
-    def __init__(self, client_name, panels, wattage, battery_voltage):
+    def __init__(self, client_name, panels, wattage, battery_voltage, system_voltage=48):
         self.client_name = client_name
         self.panels = panels
         self.wattage = wattage
         self.battery_voltage = battery_voltage
+        self.system_voltage = system_voltage
 
     def total_wattage(self):
         return self.panels * self.wattage
@@ -22,12 +23,12 @@ class SolarSystem:
         prompt = (
             f"You are a solar engineering assistant. "
             f"System: {self.panels} panels at {self.wattage}W each. "
-            f"Battery voltage: {self.battery_voltage}V on a 48V system. "
+            f"Battery voltage: {self.battery_voltage}V on a {self.system_voltage}V system. "
             f"Total wattage: {self.total_wattage()}W. "
             F"Provide a brief diagnosis and recommendation in 3 sentences. "
         )
         try:
-            response = model.generate_content(prompt)
+            response = model.generate_content(prompt, request_options={"timeout":20, "retry":None})
             return response.text
         except Exception as error:
             return f"Oops! your in-depth diagnosis isn't available right now. ({type (error).__name__}). Stick with the brief for now!"
@@ -35,12 +36,21 @@ class SolarSystem:
 
     
     def diagnose(self):
-        if self.battery_voltage > 52.1:
-            return "Look's Great"
-        elif self.battery_voltage > 48.4:
-            return "Consider averaging load profile"
+        cells = self.system_voltage / 3
+        cell_voltage = self.battery_voltage / cells
+
+        if cell_voltage > 3.9:
+            return "Voltage reading too high. Please ensure correct reading."
+        elif cell_voltage > 3.5:
+            return "Upper-limit threshold. Disconnect charge supply."
+        elif cell_voltage > 3.25:
+            return "Battery voltage looks great!"
+        elif cell_voltage > 2.8:
+            return "Consider lowering load profile."
+        elif cell_voltage > 2.4:
+            return "Low charge left. Switch load to essentials only."
         else:
-            return "Your battery bank has low charge left"
+            return "WARNING: Battery is too low. Further use will damage the cells beyond repair!"
 
 
     def report(self):
@@ -95,7 +105,8 @@ def solar_report(client_name, panels, wattage, battery_voltage):
     elif battery_voltage > 47.5:
         print("System Status: Consider lowering Battery load for longer backup.")
     else:
-        print("Warning: Battery voltage low. Lower load count to only essentials") 
+        print("Warning: Battery voltage low. Lower load count to only essentials.")
+
        
 
 if __name__ == "__main__":
