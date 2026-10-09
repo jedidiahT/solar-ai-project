@@ -21,14 +21,15 @@ class SolarSystem:
 
     def ai_diagnose(self):
         prompt = (
-            f"You are a solar engineering assistant. "
+            "You are a solar engineering assistant. "
             f"System: {self.panels} panels at {self.wattage}W each. "
             f"Battery voltage: {self.battery_voltage}V on a {self.system_voltage}V system. "
             f"Total wattage: {self.total_wattage()}W. "
-            F"Provide a brief diagnosis and recommendation in 3 sentences. "
+            "Provide a brief diagnosis and recommendation in 3 sentences. "
+            "Respond in plain text only. Do not use Markdown, asterisks, bullet points or headings. "
         )
         try:
-            response = model.generate_content(prompt, request_options={"timeout":20, "retry":None})
+            response = model.generate_content(prompt, request_options={"timeout":45, "retry":None})
             return response.text
         except Exception as error:
             return f"Oops! your in-depth diagnosis isn't available right now. ({type (error).__name__}). Stick with the brief for now!"
