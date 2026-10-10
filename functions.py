@@ -1,12 +1,13 @@
 import csv
 import os
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-3.8-flash")
+client = genai.Client(api_key=api_key)
+MODEL_NAME = "gemini-3.8-flash"
 
 class SolarSystem:
     def __init__(self, client_name, panels, wattage, battery_voltage, system_voltage=48):
@@ -29,7 +30,13 @@ class SolarSystem:
             "Respond in plain text only. Do not use Markdown, asterisks, bullet points or headings. "
         )
         try:
-            response = model.generate_content(prompt, request_options={"timeout":45, "retry":None})
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    http_options=types.HttpOptions(timeout=37000)
+                )
+            )
             return response.text
         except Exception as error:
             return f"Oops! your in-depth diagnosis isn't available right now. ({type (error).__name__}). Stick with the brief for now!"
@@ -86,7 +93,7 @@ def get_valid_float(prompt):
             print("Not quite! Please enter correct format please!")
 
 def greet_technician(name, city):
-    print(f"WELCOME BACK TO YOUR JOURNAL, ENGINEER")
+    print("WELCOME BACK TO YOUR JOURNAL, ENGINEER")
     print(f"Technician: {name}")
     print(f"Location: {city}")
 
