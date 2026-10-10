@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head> 
-    <title>SOLAR AI DIAGNOSTCS</title>
-</head>
+<title>SOLAR AI DIAGNOSTICS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -44,7 +44,8 @@
     #result:empty {
         display: none
     }
-</style> 
+</style>
+</head>
 <body>
     <h1>THE ENGINEER'S DIAGNOSTICS SYSTEM</h1>
 
@@ -96,7 +97,8 @@
             document.getElementById("result").innerText = 
             "Client: " + report.client + "\n" +
             "Total wattage: " + report.total_wattage + "W\n" + 
-            "Diagnosis: " + report.diagnosis + "\n" + 
+            "Diagnosis: " + report.diagnosis + "\n" +
+            "System voltage: " + report.system_voltage + "V\n" + 
             "AI diagnosis: " + report.ai_diagnosis;
         }
     </script>

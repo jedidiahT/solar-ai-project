@@ -74,6 +74,7 @@ class SolarSystem:
             "panels": self.panels,
             "total_wattage": self.total_wattage(),
             "voltage": self.battery_voltage,
+            "system_voltage": self.system_voltage,
             "diagnosis": self.diagnose()
         }
 
