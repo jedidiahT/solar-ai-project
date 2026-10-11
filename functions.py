@@ -20,13 +20,21 @@ class SolarSystem:
     def total_wattage(self):
         return self.panels * self.wattage
 
+    def cell_voltage(self):
+        cells = self.system_voltage / 3
+        return self.battery_voltage / cells
+
     def ai_diagnose(self):
         prompt = (
             "You are a solar engineering assistant. "
             f"System: {self.panels} panels at {self.wattage}W each. "
             f"Battery voltage: {self.battery_voltage}V on a {self.system_voltage}V system. "
             f"Total wattage: {self.total_wattage()}W. "
-            "Provide a brief diagnosis and recommendation in 3 sentences. "
+            "Battery type: LiFePO4. "
+            f"Average cell voltage: {self.cell_voltage():.2f}V. "
+            f"Our rule-based diagnosis says: {self.diagnose()} "
+            "If you disagree with the native, rule-based diagnosis, explain why in brief. "
+            "Provide a brief diagnosis of your own and recommendation in 3 sentences. "
             "Respond in plain text only. Do not use Markdown, asterisks, bullet points or headings. "
         )
         try:
@@ -44,18 +52,17 @@ class SolarSystem:
 
     
     def diagnose(self):
-        cells = self.system_voltage / 3
-        cell_voltage = self.battery_voltage / cells
+        cell_voltage = self.cell_voltage()
 
         if cell_voltage > 3.9:
             return "Voltage reading too high. Please ensure correct reading."
-        elif cell_voltage > 3.5:
+        elif cell_voltage > 3.67:
             return "Upper-limit threshold. Disconnect charge supply."
-        elif cell_voltage > 3.25:
+        elif cell_voltage > 3.35:
             return "Battery voltage looks great!"
-        elif cell_voltage > 2.8:
+        elif cell_voltage > 3.15:
             return "Consider lowering load profile."
-        elif cell_voltage > 2.4:
+        elif cell_voltage > 2.95:
             return "Low charge left. Switch load to essentials only."
         else:
             return "WARNING: Battery is too low. Further use will damage the cells beyond repair!"
