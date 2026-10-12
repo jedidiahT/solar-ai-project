@@ -12,11 +12,21 @@ MODEL_NAME = "gemini-3.8-flash"
 BATTERY_PROFILES = {
     "lifepo4": {
         "name": "LiFePO4",
-        "cells_per_12v": 4
+        "cells_per_12v": 4,
+        "2_hi": 3.9,
+        "upp_lmt": 3.67,
+        "hlthy": 3.35,
+        "cons": 3.15,
+        "lw": 2.95
     },
     "lead_acid": {
         "name": "Lead-Acid",
-        "cells_per_12v": 6
+        "cells_per_12v": 6,
+        "2_hi": 2.5,
+        "upp_lmt": 2.4,
+        "hlthy": 2.1,
+        "cons": 2.05,
+        "lw": 1.95
     }
 }
 
@@ -66,16 +76,17 @@ class SolarSystem:
     
     def diagnose(self):
         cell_voltage = self.cell_voltage()
+        profile = BATTERY_PROFILES[self.battery_type]
 
-        if cell_voltage > 3.9:
+        if cell_voltage > profile["2_hi"]:
             return "Voltage reading too high. Please ensure correct reading."
-        elif cell_voltage > 3.67:
+        elif cell_voltage > profile["upp_lmt"]:
             return "Upper-limit threshold. Disconnect charge supply."
-        elif cell_voltage > 3.35:
+        elif cell_voltage > profile["hlthy"]:
             return "Battery voltage looks great!"
-        elif cell_voltage > 3.15:
+        elif cell_voltage > profile["cons"]:
             return "Consider lowering load profile."
-        elif cell_voltage > 2.95:
+        elif cell_voltage > profile["lw"]:
             return "Low charge left. Switch load to essentials only."
         else:
             return "WARNING: Battery is too low. Further use will damage the cells beyond repair!"
