@@ -17,8 +17,9 @@ def diagnose():
         data["panels"],
         data["wattage"],
         data["battery_voltage"],
-        data.get("system_voltage", 48)
-    )
+        data.get("system_voltage", 48),
+        data.get("battery_type", "LiFePO4")
+        )
     result = system.to_dict()
     result["ai_diagnosis"] = system.ai_diagnose()
     return result

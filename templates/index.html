@@ -69,6 +69,12 @@
         <option value="96">96V</option>
     </select>
 
+    <label>Battery Type</label>
+    <select id="battery_type">
+        <option value="lifepo4" selected>LiFePO4</option>
+        <option value="lead_acid">Lead-Acid</option>
+    </select>
+
     <button onclick="getDiagnosis()">GET DIAGNOSIS</button>
     <div id="result"></div>
 
@@ -82,8 +88,8 @@
                 panels: Number(document.getElementById("panels").value),
                 wattage: Number(document.getElementById("wattage").value),
                 battery_voltage: Number(document.getElementById("battery_voltage").value),
-                system_voltage: Number(document.getElementById("system_voltage").value)
-
+                system_voltage: Number(document.getElementById("system_voltage").value),
+                battery_type: document.getElementById("battery_type").value
             };
 
             const response = await fetch("/diagnose", {

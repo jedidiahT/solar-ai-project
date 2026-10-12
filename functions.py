@@ -9,19 +9,32 @@ api_key = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
 MODEL_NAME = "gemini-3.8-flash"
 
+BATTERY_PROFILES = {
+    "lifepo4": {
+        "name": "LiFePO4",
+        "cells_per_12v": 4
+    },
+    "lead_acid": {
+        "name": "Lead-Acid",
+        "cells_per_12v": 6
+    }
+}
+
 class SolarSystem:
-    def __init__(self, client_name, panels, wattage, battery_voltage, system_voltage=48):
+    def __init__(self, client_name, panels, wattage, battery_voltage, system_voltage=48, battery_type="lifepo4"):
         self.client_name = client_name
         self.panels = panels
         self.wattage = wattage
         self.battery_voltage = battery_voltage
         self.system_voltage = system_voltage
+        self.battery_type = battery_type
 
     def total_wattage(self):
         return self.panels * self.wattage
 
     def cell_voltage(self):
-        cells = self.system_voltage / 3
+        profile = BATTERY_PROFILES[self.battery_type]
+        cells = (self.system_voltage / 12) * profile["cells_per_12v"]
         return self.battery_voltage / cells
 
     def ai_diagnose(self):
@@ -30,7 +43,7 @@ class SolarSystem:
             f"System: {self.panels} panels at {self.wattage}W each. "
             f"Battery voltage: {self.battery_voltage}V on a {self.system_voltage}V system. "
             f"Total wattage: {self.total_wattage()}W. "
-            "Battery type: LiFePO4. "
+            f"Battery type: {BATTERY_PROFILES[self.battery_type]['name']} "
             f"Average cell voltage: {self.cell_voltage():.2f}V. "
             f"Our rule-based diagnosis says: {self.diagnose()} "
             "If you disagree with the native, rule-based diagnosis, explain why in brief. "
