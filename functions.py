@@ -70,6 +70,7 @@ class SolarSystem:
             )
             return response.text
         except Exception as error:
+            print(f"AI error details: {error}")
             return f"Oops! your in-depth diagnosis isn't available right now. ({type (error).__name__}). Stick with the brief for now!"
         
 
