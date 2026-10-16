@@ -109,6 +109,21 @@ class SolarSystem:
             "diagnosis": self.diagnose()
         }
 
+def save_job(system):
+    file_exists = os.path.exists("job_log.csv")
+    with open("job_log.csv", "a", newline="") as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["Client", "Panels", "Total Wattage", "Battery Voltage", "System Voltage", "Battery Type", "Diagnosis"])
+        writer.writerow([
+            system.client_name,
+            system.panels,
+            system.total_wattage(),
+            system.battery_voltage,
+            system.system_voltage,
+            system.battery_type,
+            system.diagnose()
+        ])
 
 def get_valid_int(prompt):
     while True:
