@@ -126,6 +126,19 @@ def save_job(system):
             system.diagnose()
         ])
 
+def get_follow_ups():
+    if not os.path.exists("job_log.csv"):
+        return []
+
+    flagged = []
+    with open("job_log.csv", "r") as file:
+        reader = csv.reader(file)
+        next(reader)
+        for row in reader:
+            if row[6] != "Battery voltage looks great!":
+                flagged.append({"client": row[0], "diagnosis": row[6]})
+    return flagged       
+
 def get_valid_int(prompt):
     while True:
         try:
