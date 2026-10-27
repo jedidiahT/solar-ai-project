@@ -44,6 +44,16 @@
     #result:empty {
         display: none
     }
+
+    #follow_ups {
+        margin-top: 20px;
+        padding: 12px;
+        background-color: rgb(237, 223, 206);
+        border-left: 5px solid #e5354a;
+    }
+    #follow_ups:empty{
+        display: none
+    }
 </style>
 </head>
 <body>
@@ -77,6 +87,8 @@
 
     <button onclick="getDiagnosis()">GET DIAGNOSIS</button>
     <div id="result"></div>
+    <button onclick="showFollowUps()">SHOW FOLLOW-UPS</button>
+    <div id="follow_ups"></div>
 
     <script>
         async function getDiagnosis() {
@@ -107,6 +119,15 @@
             "System voltage: " + report.system_voltage + "V\n" + 
             "AI diagnosis: " + report.ai_diagnosis;
         }
+        async function showFollowUps() {
+            const response = await fetch("/follow-ups");
+            const data = await response.json();
+            let text = "";
+            for (const job of data.follow_ups) {
+                text = text + job.client + ": " + job.diagnosis + "\n";
+            }
+            document.getElementById("follow_ups").innerText = text
+        }    
     </script>
 </body> 
 </html>

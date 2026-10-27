@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 
-from functions import SolarSystem, save_job
+from functions import SolarSystem, save_job, get_follow_ups
 
 app = Flask(__name__)
 app.json.sort_keys = False
@@ -24,5 +24,10 @@ def diagnose():
     result["ai_diagnosis"] = system.ai_diagnose()
     save_job(system)
     return result
+
+@app.route("/follow-ups")
+def follow_ups():
+    return {"follow_ups": get_follow_ups()}
+
 if __name__ == "__main__":
     app.run(debug=True)
