@@ -126,6 +126,7 @@
             for (const job of data.follow_ups) {
                 text = text + job.client + ": " + job.diagnosis + "\n";
             }
+            if (text === "") {text = "No follow-ups. All batteries healthy!"}
             document.getElementById("follow_ups").innerText = text
         }    
     </script>
