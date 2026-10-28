@@ -1,5 +1,6 @@
 import csv
 import os
+from datetime import datetime
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
@@ -115,7 +116,7 @@ def save_job(system):
     with open("job_log.csv", "a", newline="") as file:
         writer = csv.writer(file)
         if not file_exists:
-            writer.writerow(["Client", "Panels", "Total Wattage", "Battery Voltage", "System Voltage", "Battery Type", "Diagnosis"])
+            writer.writerow(["Client", "Panels", "Total Wattage", "Battery Voltage", "System Voltage", "Battery Type", "Diagnosis", "Date"])
         writer.writerow([
             system.client_name,
             system.panels,
@@ -123,7 +124,8 @@ def save_job(system):
             system.battery_voltage,
             system.system_voltage,
             system.battery_type,
-            system.diagnose()
+            system.diagnose(),
+            datetime.now().strftime("%Y-%m-%d %H:%M")
         ])
 
 def get_follow_ups():
@@ -136,7 +138,7 @@ def get_follow_ups():
         next(reader)
         for row in reader:
             if row[6] != "Battery voltage looks great!":
-                flagged.append({"client": row[0], "diagnosis": row[6]})
+                flagged.append({"client": row[0], "diagnosis": row[6], "date": row[7]})
     return flagged       
 
 def get_valid_int(prompt):
