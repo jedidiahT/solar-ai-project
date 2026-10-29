@@ -1,5 +1,6 @@
 import csv
 import os
+import time
 from datetime import datetime
 from google import genai
 from google.genai import types
@@ -8,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
-MODEL_NAME = "gemini-3.8-flash"
+MODEL_NAME = "gemini-3.1-flash-lite"
 
 BATTERY_PROFILES = {
     "lifepo4": {
@@ -61,19 +62,23 @@ class SolarSystem:
             "Provide a brief diagnosis of your own and recommendation in 3 sentences. "
             "Respond in plain text only. Do not use Markdown, asterisks, bullet points or headings. "
         )
-        try:
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    http_options=types.HttpOptions(timeout=37000)
+        last_error = "Unknown"
+        for attempt in range(2):
+            try:
+                response = client.models.generate_content(
+                    model=MODEL_NAME,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        http_options=types.HttpOptions(timeout=37000)
+                    )
                 )
-            )
-            return response.text
-        except Exception as error:
-            print(f"AI error details: {error}")
-            return f"Oops! your in-depth diagnosis isn't available right now. ({type (error).__name__}). Stick with the brief for now!"
-        
+                return response.text
+            except Exception as error:
+                last_error = type(error).__name__
+                print(f"AI error details (attempt {attempt + 1}): {error}")
+                time.sleep(2)
+        return f"Oops! your in-depth diagnosis isn't available right now. ({last_error}). Stick with the brief for now!"
+            
 
     
     def diagnose(self):
