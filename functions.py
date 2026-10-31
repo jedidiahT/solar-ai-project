@@ -154,17 +154,17 @@ def save_job(system):
     connection.close()
 
 def get_follow_ups():
-    if not os.path.exists("job_log.csv"):
-        return []
-
+    connection = sqlite3.connect(DB_NAME)
+    connection.row_factory = sqlite3.Row
+    rows = connection.execute(
+       "SELECT client, diagnosis, date FROM jobs WHERE diagnosis != ? ORDER BY date DESC",
+       ("Battery voltage looks great!",)
+   ).fetchall()
+    connection.close()
     flagged = []
-    with open("job_log.csv", "r") as file:
-        reader = csv.reader(file)
-        next(reader)
-        for row in reader:
-            if row[6] != "Battery voltage looks great!":
-                flagged.append({"client": row[0], "diagnosis": row[6], "date": row[7]})
-    return flagged       
+    for row in rows:
+       flagged.append({"client": row["client"], "diagnosis": row["diagnosis"], "date": row["date"]})
+    return flagged 
 
 def get_valid_int(prompt):
     while True:
