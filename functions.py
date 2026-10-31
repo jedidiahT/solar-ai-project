@@ -1,6 +1,7 @@
 import csv
 import os
 import time
+import sqlite3
 from datetime import datetime
 from google import genai
 from google.genai import types
@@ -31,6 +32,24 @@ BATTERY_PROFILES = {
         "lw": 1.95
     }
 }
+
+DB_NAME = "solar_ai.db"
+def init_db():
+    connection = sqlite3.connect(DB_NAME)
+    connection.execute("""
+        CREATE TABLE IF NOT EXISTS jobs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            client TEXT,
+            panels INTEGER,
+            total_wattage INTEGER,
+            battery_voltage REAL,
+            system_voltage INTEGER,
+            battery_type TEXT,
+            diagnosis TEXT,
+            date TEXT)
+    """)
+    connection.commit()
+    connection.close()
 
 class SolarSystem:
     def __init__(self, client_name, panels, wattage, battery_voltage, system_voltage=48, battery_type="lifepo4"):
@@ -117,12 +136,10 @@ class SolarSystem:
         }
 
 def save_job(system):
-    file_exists = os.path.exists("job_log.csv")
-    with open("job_log.csv", "a", newline="") as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            writer.writerow(["Client", "Panels", "Total Wattage", "Battery Voltage", "System Voltage", "Battery Type", "Diagnosis", "Date"])
-        writer.writerow([
+    connection = sqlite3.connect(DB_NAME)
+    connection.execute(
+        "INSERT INTO jobs (client, panels, total_wattage, battery_voltage, system_voltage, battery_type, diagnosis, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        (
             system.client_name,
             system.panels,
             system.total_wattage(),
@@ -131,7 +148,10 @@ def save_job(system):
             system.battery_type,
             system.diagnose(),
             datetime.now().strftime("%Y-%m-%d %H:%M")
-        ])
+        )
+    )
+    connection.commit()
+    connection.close()
 
 def get_follow_ups():
     if not os.path.exists("job_log.csv"):

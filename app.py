@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify, render_template
 
-from functions import SolarSystem, save_job, get_follow_ups
+from functions import SolarSystem, save_job, get_follow_ups, init_db
 
 app = Flask(__name__)
 app.json.sort_keys = False
+init_db()
 
 @app.route("/")
 def home():

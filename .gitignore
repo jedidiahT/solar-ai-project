@@ -2,3 +2,4 @@
 session_log.csv
 __pycache__/
 job_log.csv
+*.db
