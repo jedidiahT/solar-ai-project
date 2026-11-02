@@ -127,24 +127,22 @@
         async function showFollowUps() {
             const response = await fetch("/follow-ups");
             const data = await response.json();
-            let text = "";
-            for (const job of data.follow_ups) {
-                text = text + job.date + " | " + job.client +": " + job.diagnosis + "\n";
-            }
-            if (text === "") {text = "No follow-ups. All batteries healthy!"}
-            document.getElementById("follow_ups").innerText = text
+            const lines = data.follow_ups.map(job => job.date + " | " + job.client + ": " + job.diagnosis);
+            displayLines("follow_ups", lines, "No recent jobs needing follow up!")
+            
         }    
         async function showHistory() {
             const search = document.getElementById("history_search").value;
             const response = await fetch("/history?client=" + encodeURIComponent(search));
             const data = await response.json();
-            let text = "";
-            for (const visit of data.history) {
-                text = text + visit.date + " | " + visit.client + " | " + visit.battery_voltage + "V | " + visit.diagnosis + "\n";
-            }
-            if (text=== "") {text = "No visits found under that name.";}
-            document.getElementById("history").innerText = text;
-            
+            const lines = data.history.map(visit => visit.date + " | " + visit.client + " | " + visit.battery_voltage + "V | " + visit.diagnosis);
+            displayLines("history", lines, "No visits found under that name.");
+        }
+
+        function displayLines(boxId, lines, emptyMessage) {
+            let text = lines.join("\n");
+            if (text === "") {text = emptyMessage;}
+            document.getElementById(boxId).innerText = text;
         }
     </script>
 </body> 
