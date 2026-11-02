@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 
-from functions import SolarSystem, save_job, get_follow_ups, init_db
+from functions import SolarSystem, save_job, get_follow_ups, init_db, get_client_history
 
 app = Flask(__name__)
 app.json.sort_keys = False
@@ -30,5 +30,9 @@ def diagnose():
 def follow_ups():
     return {"follow_ups": get_follow_ups()}
 
+@app.route("/history")
+def history():
+    search = request.args.get("client", "")
+    return {"history": get_client_history(search)}
 if __name__ == "__main__":
     app.run(debug=True)

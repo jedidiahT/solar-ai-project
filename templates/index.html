@@ -90,6 +90,11 @@
     <button onclick="showFollowUps()">SHOW FOLLOW-UPS</button>
     <div id="follow_ups"></div>
 
+    <label>Client History</label>
+    <input id="history_search" type="text" placeholder="Enter Client name">
+    <button onclick="showHistory()">SEARCH HISTORY</button>
+        <div id="history"></div>
+
     <script>
         async function getDiagnosis() {
             const clientName = document.getElementById("client_name").value; 
@@ -129,6 +134,18 @@
             if (text === "") {text = "No follow-ups. All batteries healthy!"}
             document.getElementById("follow_ups").innerText = text
         }    
+        async function showHistory() {
+            const search = document.getElementById("history_search").value;
+            const response = await fetch("/history?client=" + encodeURIComponent(search));
+            const data = await response.json();
+            let text = "";
+            for (const visit of data.history) {
+                text = text + visit.date + " | " + visit.client + " | " + visit.battery_voltage + "V | " + visit.diagnosis + "\n";
+            }
+            if (text=== "") {text = "No visits found under that name.";}
+            document.getElementById("history").innerText = text;
+            
+        }
     </script>
 </body> 
 </html>

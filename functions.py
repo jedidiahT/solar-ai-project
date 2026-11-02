@@ -166,6 +166,16 @@ def get_follow_ups():
        flagged.append({"client": row["client"], "diagnosis": row["diagnosis"], "date": row["date"]})
     return flagged 
 
+def get_client_history(search):
+    connection = sqlite3.connect(DB_NAME)
+    connection.row_factory = sqlite3.Row
+    rows = connection.execute(
+        "SELECT client, date, battery_voltage, system_voltage, battery_type, diagnosis FROM jobs WHERE client LIKE ? ORDER BY date DESC",
+        (f"%{search}%",)
+    ).fetchall()
+    connection.close()
+    return [dict(row) for row in rows]
+
 def get_valid_int(prompt):
     while True:
         try:
